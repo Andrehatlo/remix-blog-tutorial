@@ -124,131 +124,26 @@ Prior to your first deployment, you'll need to do a few things:
 
 Now that everything is set up you can commit and push your changes to your repo. Every commit to your `main` branch will trigger a deployment to your production environment, and every commit to your `dev` branch will trigger a deployment to your staging environment.
 
-
-# Github Workflow
-## Local dev -> Remote dev -> main/master 
-
 ```
-# git checkout -b dev
-Switched to a new branch 'dev'
-```
+# Clone the git repo:
+git clone <REPO_URL.git>
 
-- git checkout command will try to checkout the given branch.
-- In our case, we don’t have a branch called “dev”. So, the above command will create a new “dev” branch.
-- Once the empty dev branch is created, it will also switch to the dev branch and make that as our working branch.
+# Create new dev branch, do your work, and commit changes locally
+git checkout -b dev
+vi index.html
+git commit -m "Made the change.." index.html
 
-Verify that the new branch got created:
-
-```
-# git branch -a
-* dev
-  master
-  remotes/origin/HEAD -> origin/master
-  remotes/origin/master
-```
-
--  The `*` is now in front of dev, which indicates the current working branch is dev.
-
-The following git status command indicates that we are currently on the new “dev” branch.
-
-```
-# git status
-On branch dev
-nothing to commit, working tree clean
-```
-
-
-Commit changes to `dev` branch: 
-```
-git commit -a -m "Fixed email address"
-```
-
-__Important!__
- 
- >Initially when we created our `dev` branch, it exists only locally on our local laptop. It’s better to push our local “dev” branch to the remote git repository.
-
-> Even if you are the only person who is working on the “dev” branch
-
-> Its still a good idea to push local changes to remote git repo to keep a remote backup of your changes.
-
-> This way, you can push all your changes to the remote dev branch, and someone else who is working on the “dev” branch can then checkout the changes. 
-
-> Even if you are the only person who is working on the “dev” branch, it is still a good idea to push your local changes to remote git repo to keep a remote backup of your changes.
-
-When you do a git push at this stage, it will give the following error message, as we don’t have the “dev” branch in the remote git repository.
-
-```
-# git push
-fatal: The current branch dev has no upstream branch.
-```
-
-Push to `dev` branch when working locally: 
-```
+# Push your changes to remote dev branch
 git push --set-upstream origin dev
-```
 
-Once you are done with your development work on the “dev” branch, and validated your changes, you may want to merge the changes to the master branch.
+# Merge dev branch to master
+git checkout master
+git merge dev
 
-1. Switch your working branch from dev to master:
+# Finally, delete dev branch both locally and remote
+git branch -d dev
+git branch -d -r origin/dev
 
-```
-# git checkout master
-Switched to branch 'master'
-Your branch is up-to-date with 'origin/master'.
-```
-
-Once you are in the master branch, execute git merge dev as shown below to merge the “dev” branch with master.
-
-```
-# git merge dev
-Updating 03c769c..b0147e6
-Fast-forward
- index.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-```
-
-You’ll see the word “Fast-forward” in the above output. All git does in the master branch is to move the HEAD pointer in the master branch to the latest commit from the “dev” branch.
-
-Once the merge is done, make sure to do a git push, to push your changes to the remote repository.
-
-```
-# git push
-Total 0 (delta 0), reused 0 (delta 0)
-To https://remote-git-repo-url/demoproject
-   03c769c..b0147e6  master -> master
-```
-
-Now that you’e completed your development work, and merged the changes to master branch, you may want to delete your “dev” branch.
-
-```
-# git branch -d dev
-Deleted branch dev (was b0147e6).
-```
-
-You see from the following output, the “dev” branch is still in the remote git repository.
-
-```
-# git branch -a
-* master
-  remotes/origin/HEAD -> origin/master
-  remotes/origin/dev
-  remotes/origin/master
-```
-
-The following command will delete the remote “dev” branch.
-
-```
-# git branch -d -r origin/dev
-Deleted remote-tracking branch origin/dev (was b0147e6).
-```
-
-After the above clean-up, now we just have only the master branch which includes all the development work that we recently did.
-
-```
-# git branch -a
-* master
-  remotes/origin/HEAD -> origin/master
-  remotes/origin/master
 ```
 
 ### Connecting to your database
