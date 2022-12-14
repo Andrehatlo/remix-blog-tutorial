@@ -112,7 +112,7 @@ jobs:
       - name: 🌳 Cypress run
         uses: cypress-io/github-action@v5
         with:
-          start: npm run start:mocks
+          start: npm run start:mocks binode --require ./mocks --require ./node_modules/dotenv/config -- @remix-run/serve:remix-serve build
           wait-on: "http://localhost:8811"
         env:
           PORT: "8811"
